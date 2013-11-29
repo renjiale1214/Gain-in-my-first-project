@@ -1,0 +1,66 @@
+/*
+ 使用微信官方sdk，单纯做微信分享。最简单的实现
+ 
+ 本例中实现的是分享链接到微信好友和朋友圈，其中shareToWXSession是分享好友；shareToWXTimeLine是分享到朋友圈
+ 
+ 微信官方demo中要求的onreq和onresp方法其实不一定要实现。onreq是微信调用你的APP（第三方应用）时候的回调；onresp是你的APP
+ 请求分享到微信时候的回调，通常我们只需要在onresp中写东西。具体每个方法里能够返回什么样的类型参见微信官方文档
+*/
+
+
+-(IBAction)shareToWXSession:(id)sender
+{
+    WXMediaMessage *message = [WXMediaMessage message];
+    message.title = @"这是第三方分享的测试";
+    message.description = @"反正写了也没什么用处，随便写写就行了";
+    [message setThumbImage:[UIImage imageNamed:@"res2.png"]];
+    
+    WXWebpageObject *url = [WXWebpageObject object];
+    url.webpageUrl = @"http://tech.qq.com/zt2012/tmtdecode/252.htm";
+    
+    message.mediaObject = url;
+    
+    SendMessageToWXReq* req = [[SendMessageToWXReq alloc] init];
+    req.bText = NO;
+    req.message = message;
+    req.scene = WXSceneSession;
+    
+    [WXApi sendReq:req];
+}
+
+-(IBAction)shareToWXTimeLine:(id)sender;
+{
+    WXMediaMessage *message = [WXMediaMessage message];
+    message.title = @"这是第三方分享的测试";
+    message.description = @"反正写了也没什么用处，随便写写就行了";
+    [message setThumbImage:[UIImage imageNamed:@"res2.png"]];
+    
+    WXWebpageObject *url = [WXWebpageObject object];
+    url.webpageUrl = @"http://tech.qq.com/zt2012/tmtdecode/252.htm";
+    
+    message.mediaObject = url;
+    
+    SendMessageToWXReq* req = [[SendMessageToWXReq alloc] init];
+    req.bText = NO;
+    req.message = message;
+    req.scene = WXSceneTimeline;
+    
+    [WXApi sendReq:req];
+}
+
+-(void) onReq:(BaseReq*)req
+{
+    NSLog(@"hahaha");
+}
+
+-(void) onResp:(BaseResp*)resp
+{
+    if([resp isKindOfClass:[SendMessageToWXResp class]])
+    {
+        NSString *strTitle = [NSString stringWithFormat:@"发送媒体消息结果"];
+        NSString *strMsg = [NSString stringWithFormat:@"errcode:%d", resp.errCode];
+        
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:strTitle message:strMsg delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
+        [alert show];
+    }
+}
