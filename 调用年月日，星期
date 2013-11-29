@@ -1,0 +1,48 @@
+/*
+ 这个是提取当前日期的方法，switch是因为苹果的“星期几”只支持数字显示，而且1代表周日。所以需要用它做转换
+ 这里能显示的项目包括：年、月、日、星期几  没有显示当前几点几分几秒
+*/			
+				
+				
+				
+				NSDate *sendDate = [NSDate date];
+        NSDate *week = [NSDate date];
+        NSString *weekString;
+        NSCalendar *calendar = [NSCalendar currentCalendar];
+        NSUInteger unitFlage = NSDayCalendarUnit | NSMonthCalendarUnit | NSYearCalendarUnit;
+        NSDateComponents *components = [calendar components:unitFlage fromDate:sendDate];
+        NSDateComponents *componentsWeek;
+        componentsWeek = [calendar components:NSWeekdayCalendarUnit fromDate:week];
+        NSInteger year = [components year];
+        NSInteger month = [components month];
+        NSInteger day = [components day];
+        NSInteger weekDay = [componentsWeek weekday];
+        switch (weekDay) {
+            case 1:
+                weekString = @"日";
+                break;
+            case 2:
+                weekString = @"一";
+                break;
+            case 3:
+                weekString = @"二";
+                break;
+            case 4:
+                weekString = @"三";
+                break;
+            case 5:
+                weekString = @"四";
+                break;
+            case 6:
+                weekString = @"五";
+                break;
+            case 7:
+                weekString = @"六";
+                break;
+            default:
+                break;
+        }
+        NSString *dateString = [NSString stringWithFormat:@"%4d年%2d月%2d日",year,month,day];
+        NSString *showTheWholeDate = [NSString stringWithFormat:@"%@  星期%@",dateString,weekString];
+        NSLog(@"%@",showTheWholeDate);
+        self.dateLabel.text = showTheWholeDate;
